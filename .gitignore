@@ -1,0 +1,12 @@
+node_modules
+*.log
+dump.rdb
+*~
+cov-*
+coverage
+plato
+.idea
+.DS_Store
+*.sw*
+launch.json
+dist

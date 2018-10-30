@@ -1,0 +1,64 @@
+{
+  "name": "nodets-sample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/src/index.js",
+  "publishConfig": {
+    "registry": "http://nexus3-misanche-nexus.apps.na39.openshift.opentlc.com/repository/npm_internal/"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "cls-hooked": "^4.2.2",
+    "cors": "2.8.4",
+    "debug": "^3.1.0",
+    "express": "4.16.2",
+    "js-yaml": "3.10.0",
+    "node-uuid": "^1.4.8",
+    "perfy": "^1.1.2",
+    "prom-client": "11.0.0",
+    "swagger-tools": "0.10.3",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/chai": "4.0.4",
+    "@types/chai-http": "3.0.3",
+    "@types/cls-hooked": "^4.2.0",
+    "@types/debug": "0.0.30",
+    "@types/express": "4.0.39",
+    "@types/mocha": "2.2.43",
+    "@types/node": "8.0.46",
+    "@types/node-uuid": "0.0.28",
+    "@types/swagger-tools": "0.10.4",
+    "@types/winston": "^2.3.7",
+    "chai": "4.1.2",
+    "chai-http": "3.0.0",
+    "cpx": "1.5.0",
+    "mocha": "3.4.2",
+    "nodemon": "1.12.1",
+    "shelljs": "^0.7.8",
+    "sinon": "^4.1.5",
+    "supertest": "3.0.0",
+    "ts-mocha": "1.0.3",
+    "ts-node": "3.3.0",
+    "tslint": "5.8.0",
+    "typescript": "2.5.3"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build:copy": "cpx \"src/**/*.yaml\" dist/",
+    "start": "DEBUG=fes:* node dist/index.js",
+    "build:live": "npm run clean && npm run lint && tsc -p tsconfig.json && npm run build:copy",
+    "test": "DEBUG=fes:* TS_NODE_CACHE=false ./node_modules/.bin/mocha --compilers ts:ts-node/register ./test/*",
+    "build:dev": "nodemon --exec ts-node -- ./src/index.ts",
+    "dev": "DEBUG=fes:* TS_NODE_CACHE=false npm run build:dev",
+    "lint": "tslint -p tsconfig.json",
+    "updateSwagger": "node scripts/updateSwagger.js",
+    "updateAll": "node scripts/updateCode.js",
+    "testOne": "TS_NODE_CACHE=false ./node_modules/.bin/mocha --compilers ts:ts-node/register "
+  },
+  "engines": {
+    "node": ">6.11.0"
+  },
+  "author": "Prima",
+  "license": "ISC"
+}

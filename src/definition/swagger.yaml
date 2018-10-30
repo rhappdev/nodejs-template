@@ -1,0 +1,71 @@
+swagger: '2.0'
+info:
+  title: Simple Weather API
+  description: API for getting the current weather information.
+  version: '1.0'
+produces:
+  - application/json
+host: 'localhost:8001'
+basePath: /api
+paths:
+  /hello:
+    post:
+      x-swagger-router-controller: helloWorldRoute
+      operationId: helloWorldPost
+      tags:
+        - /hello
+      description: >-
+        Returns the current weather for the requested location using the
+        requested unit.
+      parameters:
+        - name: greeting
+          in: query
+          description: Name of greeting
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful request.
+          schema:
+            $ref: '#/definitions/Hello'
+        default:
+          description: Invalid request.
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      x-swagger-router-controller: helloWorldRoute
+      operationId: helloWorldGet
+      tags:
+        - /hello
+      description: >-
+        Returns the current weather for the requested location using the
+        requested unit.
+      parameters:
+        - name: greeting
+          in: query
+          description: Name of greeting
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful request.
+          schema:
+            $ref: '#/definitions/Hello'
+        default:
+          description: Invalid request.
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Hello:
+    properties:
+      msg:
+        type: string
+    required:
+      - msg
+  Error:
+    properties:
+      message:
+        type: string
+    required:
+      - message
+

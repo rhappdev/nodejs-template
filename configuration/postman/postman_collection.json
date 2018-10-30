@@ -1,0 +1,110 @@
+{
+	"info": {
+		"_postman_id": "f7f195bc-65cc-47a8-bb7a-6e288186b0d3",
+		"name": "Simple Weather API",
+		"description": "API for getting the current weather information.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "hello",
+			"item": [
+				{
+					"name": "",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6822494f-d81d-4522-8d31-4912adf9cf00",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{HOST}}/api/hello?greeting=Mikel",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"hello"
+							],
+							"query": [
+								{
+									"key": "greeting",
+									"value": "Mikel"
+								}
+							]
+						},
+						"description": "Returns the current weather for the requested location using the requested unit."
+					},
+					"response": []
+				},
+				{
+					"name": "",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a24b228c-442b-4ffa-bced-02b200ddc856",
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{HOST}}/api/hello?greeting=Mikel",
+							"host": [
+								"{{HOST}}"
+							],
+							"path": [
+								"api",
+								"hello"
+							],
+							"query": [
+								{
+									"key": "greeting",
+									"value": "Mikel"
+								}
+							]
+						},
+						"description": "Returns the current weather for the requested location using the requested unit."
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for hello"
+		}
+	]
+}

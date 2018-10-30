@@ -1,0 +1,13 @@
+{
+  "id": "0a1b02fa-7575-4a30-8bfc-154c990e45d1",
+  "name": "uat",
+  "values": [{
+    "key": "HOST",
+    "value": "http://nodejs-misanchez-uat.apps.na39.openshift.opentlc.com",
+    "description": "",
+    "enabled": true
+  }],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2018-10-11T08:38:13.329Z",
+  "_postman_exported_using": "Postman/6.3.0"
+}

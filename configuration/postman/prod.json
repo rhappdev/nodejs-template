@@ -1,0 +1,13 @@
+{
+  "id": "ed5a6095-889f-478c-b057-22a820c83e18",
+  "name": "prod",
+  "values": [{
+    "key": "HOST",
+    "value": "http://nodejs-misanchez-prod.apps.na39.openshift.opentlc.com",
+    "description": "",
+    "enabled": true
+  }],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2018-10-11T08:37:56.527Z",
+  "_postman_exported_using": "Postman/6.3.0"
+}
