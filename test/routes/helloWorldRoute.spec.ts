@@ -13,7 +13,6 @@ describe("Hello World - Test path with parameters ", function () {
             .set("content-type", "application/json")
             .send({})
             .end((err: Error, res: any): void => {
-
                 expect(res.statusCode).to.be.equal(200);
                 expect(res.body.msg).to.be.equal("hello world");
                 done();
@@ -25,13 +24,12 @@ describe("Hello World - Test path with no parameters ", function () {
     it("should return an error for missing required parameters", (done: () => void): void => {
 
         chai.request(app)
-            .get("/api/hello")
+            .get("/api/hello/")
             .set("content-type", "application/json")
             .send({})
             .end((err: Error, res: any): void => {
-
                 expect(res.statusCode).to.be.equal(400);
-                expect(res.body.message).to.be.equal("Request validation failed: Parameter (greeting) is required");
+                expect(res.body[0].message.trim()).to.be.equal("Missing parameter greeting in query.");
                 done();
             });
     });

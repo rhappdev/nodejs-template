@@ -61,6 +61,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+servers:
+  - url: '/api'
 components:
   schemas:
     Hello:

@@ -8,12 +8,10 @@ chai.use(chaiHttp);
 describe("App", () => {
   it("works", (done: () => void): void => {
   chai.request(app)
-      .get("/api/hello?greeting=world")
+      .get("/docs/")
       .send({})
       .end((err: Error, res: any): void => {
-
           expect(res.statusCode).to.be.equal(200);
-          expect(res.body.msg).to.be.equal("hello world");
           done();
       });
 
