@@ -1,12 +1,8 @@
-swagger: '2.0'
+openapi: 3.0.0
 info:
   title: Simple Weather API
   description: API for getting the current weather information.
   version: '1.0'
-produces:
-  - application/json
-host: 'localhost:8001'
-basePath: /api
 paths:
   /hello:
     post:
@@ -22,16 +18,21 @@ paths:
           in: query
           description: Name of greeting
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful request.
-          schema:
-            $ref: '#/definitions/Hello'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
         default:
           description: Invalid request.
-          schema:
-            $ref: '#/definitions/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
     get:
       x-swagger-router-controller: helloWorldRoute
       operationId: helloWorldGet
@@ -45,27 +46,32 @@ paths:
           in: query
           description: Name of greeting
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful request.
-          schema:
-            $ref: '#/definitions/Hello'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
         default:
           description: Invalid request.
-          schema:
-            $ref: '#/definitions/Error'
-definitions:
-  Hello:
-    properties:
-      msg:
-        type: string
-    required:
-      - msg
-  Error:
-    properties:
-      message:
-        type: string
-    required:
-      - message
-
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Hello:
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+    Error:
+      properties:
+        message:
+          type: string
+      required:
+        - message
