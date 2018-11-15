@@ -1,4 +1,5 @@
 # Nodejs FES Template
+This version includes support for OpenAPI 3.0
 
 # Environment vars
 This project uses the following environment variables:
@@ -214,29 +215,37 @@ paths:
           in: query
           description: Name of greeting
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful request.
-          schema:
-            $ref: '#/definitions/Hello'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
         default:
           description: Invalid request.
-          schema:
-            $ref: '#/definitions/Error'
-definitions:
-  Hello:
-    properties:
-      msg:
-        type: string
-    required:
-      - msg
-  Error:
-    properties:
-      message:
-        type: string
-    required:
-      - message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+servers:
+  - url: '/api'
+components:
+  schemas:
+    Hello:
+      properties:
+        msg:
+          type: string
+      required:
+        - msg
+    Error:
+      properties:
+        message:
+          type: string
+      required:
+        - message
 ```
 ### Highlights of the swagger.yaml File
 
@@ -258,34 +267,52 @@ definitions:
 - definitions:
    
    This section defines the structure of objects used in responses or as parameters.
+- servers:
+   Defines the base path or the servers available.
+
 ## Swagger Middleware
-The project is using npm module `swagger-tools` that provides middleware functions for metadata, security, validation and routing, and bundles Swagger UI into Express.
+The project is using npm module `oas-tools` that provides middleware functions for metadata, security, validation and routing, and bundles Swagger UI into Express using OpenAPI 3.0 spec.
+
+__It is also possible to set configuration variables, these are them:__
+
+| Name	| Type	| Explanation / Values |
+| ------------- | ------------- | ------------- |
+|`logLevel` | `String` | Possible values from less to more level of verbosity are: error, warning, custom, info and debug. Ignored if `customLogger` is used. Default is info. |
+|`logFile` | `String` | Logs file path. Ignored if `customLogger` is used. |
+|`customLogger` | `Object` | Replaces the included logger with the one specified here, so that you can reuse your own logger. `logLevel` and `logFile` will be ignored if this variable is used. Null by default. |
+|`controllers` | `String` | Controllers location path. |
+|`strict`	| `Boolean` | Indicates whether validation must stop the request process if errors were found when validating according to specification file. false by default. |
+|`router`	| `Boolean` | Indicates whether router middleware should be used. True by default. |
+|`validator` | `Boolean` | Indicates whether validator middleware should be used. True by default. |
+|`docs` | `Boolean` | Indicates whether API docs (Swagger UI) should be available. True by default. The swagger-ui endpoint is acessible at /docs endpoint.|
+|`oasSecurity` | `Boolean` | Indicates whether security components defined in the spec file will be handled based on `securityFile` settings. `securityFile` will be ignored if this is set to false. Refer to [oasSecurity](#2-oassecurity) for more information. False by default. |
+|`securityFile` | `Object`| Defines the settings that will be used to handle security. Ignored if `oasSecurity` is set to false. Null by default. |
+|`oasAuth` | `Boolean` | Indicates whether authorization will be automatically handled based on `grantsFile` settings. `grantsFile` will be ignored if this is set to false. Refer to [oasAuth](#3-oasauth) for more information. False by default. |
+|`grantsFile` | `Object` | Defines the settings that will be use to handle automatic authorization. Ignored if `oasAuth` is set to false. Null by default. |
+|`ignoreUnknownFormats` | `Boolean`	| Indicates whether z-schema validator must ignore unknown formats when validating requests and responses. True by default. |
+
+For setting these variables you can use the function configure and pass to it either a JavaScript object or a yaml/json file containing such object.
+
+```javascript
+const options = {
+        controllers: basePath + "/routes",
+        loglevel: "debug",
+        strict: true,
+        router: true,
+        validator: true,
+        docs: !isProd
+    };
+    swaggerTools.configure(options);
 ```
-swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
-        // Interpret Swagger resources and attach metadata to request - must be first in swagger-tools middleware chain
-        app.use(middleware.swaggerMetadata());
-
-        // Validate Swagger requests
-        app.use(middleware.swaggerValidator({}));
-
-        // Route validated requests to appropriate controller
-        app.use(middleware.swaggerRouter(options));
-       
-        // Serve the Swagger documents and Swagger UI
-        app.use(middleware.swaggerUi());
+To initialise just type the following:
+```javascript
+const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");
+    
+    swaggerTools.initialize(swaggerDoc, app, function() {
         cb();
-
-    })
+    });
 ```
-- Metadata
 
-  Swagger extends the Express request object, so that each route handler has access to incoming parameters that have been parsed based on the spec, as well as additional Swagger-generated information from the client.
-
-  Any incoming parameters for the API call will be available in `req.swagger` regardless of whether they were transmitted using query, body, header, etc.
-
-- Validator
-
-  Validation middleware will only route requests that match paths in Swagger specification exactly in terms of endpoint path, request mime type, required and optional parameters, and their declared types.
 
 - Swagger Router
 
@@ -296,7 +323,7 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
   ```
   paths:
   /hello:
-      get:
+    get:
       x-swagger-router-controller: helloWorldRoute
       operationId: helloWorldGet
       tags:
@@ -309,23 +336,23 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
           in: query
           description: Name of greeting
           required: true
-          type: string
+          schema:
+            type: string
       responses:
         '200':
           description: Successful request.
-          schema:
-            $ref: '#/definitions/Hello'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hello'
         default:
           description: Invalid request.
-          schema:
-            $ref: '#/definitions/Error'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   ```
 The fields `x-swagger-router-controller` will point the middleware to a `helloWorldRoute.ts` file in the route's directory, while the `operationId` names the handler function to be invoked.
-
-- Swagger UI
-
-  The final piece of middleware enables serving of the swagger-ui interface direct from the Express server. It also serves the raw Swagger schema (.json) that clients can consume. Paths for both are configurable.
-  The swagger-ui endpoint is acessible at /docs endpoint.
 
 # TSLint
 TSLint is a code linter that helps catch minor code quality and style issues.
