@@ -34,7 +34,7 @@
     "chai-http": "^4.2.0",
     "cpx": "1.5.0",
     "mocha": "^5.2.0",
-    "nodemon": "1.12.1",
+    "nodemon": "^1.18.6",
     "shelljs": "^0.7.8",
     "sinon": "^4.1.5",
     "supertest": "3.0.0",
