@@ -21,7 +21,12 @@ export const initSwaggerMiddlware = function (app: express.Express, basePath: st
         strict: true,
         router: true,
         validator: true,
-        docs: !isProd
+        docs: {
+            apiDocs: "/api-docs",
+            apiDocsPrefix: "",
+            swaggerUi: "/docs",
+            swaggerUiPrefix: ""
+        }
     };
     swaggerTools.configure(options);
     swaggerTools.initialize(swaggerDoc, app, function() {
