@@ -31,7 +31,6 @@ initSwaggerMiddlware(app, resolve(__dirname), () => {
         res.status(500);
       }
       res.json(errMsg);
-      console.log("test");
     }
   });
 

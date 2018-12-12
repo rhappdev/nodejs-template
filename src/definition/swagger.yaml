@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Simple Weather API
-  description: API for getting the current weather information.
+  title: Hello World API
+  description: Hello world API.
   version: '1.0'
 paths:
   /hello:
@@ -11,8 +11,7 @@ paths:
       tags:
         - /hello
       description: >-
-        Returns the current weather for the requested location using the
-        requested unit.
+        Returns greeting.
       parameters:
         - name: greeting
           in: query
@@ -39,8 +38,7 @@ paths:
       tags:
         - /hello
       description: >-
-        Returns the current weather for the requested location using the
-        requested unit.
+        Returns greeting.
       parameters:
         - name: greeting
           in: query
