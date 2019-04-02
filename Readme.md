@@ -342,6 +342,9 @@ npm run lint  // runs only TSLint
 ```
 
 
+# Common Issues
 
+## npm install fails
+The current solution has an example for using a private npm repository. if you want to use the public npm repository, remove the .npmrc file.
 
 
