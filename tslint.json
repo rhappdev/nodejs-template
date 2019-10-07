@@ -19,9 +19,7 @@
     "object-literal-key-quotes": [
       false
     ],
-    "max-classes-per-file": [
-      false
-    ],
+    "max-classes-per-file": false,
     "no-console": [
       false,
       "log"

@@ -9,6 +9,7 @@ for (var key in pkg.dependencies){
 console.log("Tobe updated: ",update);
 update.forEach(function(upd){
   shelljs.exec("npm update "+upd);
-})
+});
+
 console.log("Update template");
 shelljs.exec("git fetch upstream");
