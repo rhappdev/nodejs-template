@@ -53,7 +53,7 @@ export class TDebug {
   }
 }
 
-const debug = new TDebug("fes:src:lib:log");
+const debug = new TDebug("app:src:lib:log");
 
 export enum Levels {
   Log = "LOG",
@@ -154,13 +154,18 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
   next();
 }
 
-const logger = new (winston.Logger)({
+/* const logger = new (winston.Logger)({
   transports: [
     new (winston.transports.Console)({
       timestamp: true,
       "level": env.get("LOG_LEVEL")
     })
   ]
+}); */
+
+const logger = winston.createLogger({
+  level: env.get("LOG_LEVEL"),
+  transports: [ new winston.transports.Console()]
 });
 
 export default logger;

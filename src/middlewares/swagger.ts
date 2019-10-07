@@ -9,9 +9,9 @@ declare module "express" {
         requestId: string;
     }
 }
-const isProd = (process.env.NODE_ENV === "production");
+// const isProd = (process.env.NODE_ENV === "production");
 function loadDocumentSync(file: string): any {
-    return YAML.load(readFileSync(file));
+    return YAML.load(readFileSync(file, "utf8"));
 }
 export const initSwaggerMiddlware = function (app: express.Express, basePath: string, cb: any) {
     const swaggerDoc = loadDocumentSync(basePath + "/definition/swagger.yaml");

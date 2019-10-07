@@ -1,6 +1,6 @@
 var pkg=require("../package.json");
 var shelljs=require("shelljs");
-var update=["sos-api"];
+var update=["api"];
 for (var key in pkg.dependencies){
   if (key.indexOf("fes-") === 0 ){
     update.push(key);

@@ -4,7 +4,7 @@ import * as express from "express";
 import * as Debug from "debug";
 import * as P from "bluebird";
 
-const debug = Debug("fes:src:lib:namespace");
+const debug = Debug("app:src:lib:namespace");
 
 const getNamespace = cls.getNamespace;
 const createNamespace = cls.createNamespace;

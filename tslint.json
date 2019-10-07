@@ -33,7 +33,6 @@
       "allow-pascal-case",
       "allow-leading-underscore"
     ],
-    "no-unused-variable": true,
     "interface-name": [
       false
     ],
