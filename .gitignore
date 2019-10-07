@@ -8,5 +8,4 @@ plato
 .idea
 .DS_Store
 *.sw*
-launch.json
 dist
