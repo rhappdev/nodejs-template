@@ -55,7 +55,7 @@ The folder structure of this app is explained below:
 | **dist**                 | Contains the distributable (or output) from your TypeScript build.  |
 | **node_modules**         | Contains all  npm dependencies                                                            |
 | **src**                  | Contains  source code that will be compiled to the dist dir                               |
-| **src/config**           | Application configuration including environment-specific configs 
+| **configuration**        | Application configuration including environment-specific configs 
 | **src/controllers**      | Controllers define functions to serve various express routes. 
 | **src/lib**              | Common libraries to be used across your app.  
 | **src/middlewares**      | Express middlewares which process the incoming requests before handling them down to the routes
