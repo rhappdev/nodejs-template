@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/src/index.js",
-  "publishConfig": {
-    "registry": "http://nexus3-misanche-nexus.apps.na39.openshift.opentlc.com/repository/npm_internal/"
-  },
   "dependencies": {
     "bluebird": "^3.5.1",
     "cls-hooked": "^4.2.2",
@@ -54,7 +51,8 @@
     "lint": "tslint -p tsconfig.json",
     "updateSwagger": "node scripts/updateSwagger.js",
     "updateAll": "node scripts/updateCode.js",
-    "testOne": "TS_NODE_CACHE=false ./node_modules/.bin/mocha --compilers ts:ts-node/register "
+    "testOne": "TS_NODE_CACHE=false ./node_modules/.bin/mocha --compilers ts:ts-node/register",
+    "postinstall": "npm run clean && npm run lint && tsc -p tsconfig.json && npm run build:copy"
   },
   "engines": {
     "node": ">6.11.0"
