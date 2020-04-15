@@ -10,3 +10,4 @@ plato
 *.sw*
 launch.json
 dist
+target
