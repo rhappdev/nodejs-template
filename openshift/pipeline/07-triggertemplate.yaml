@@ -1,0 +1,40 @@
+apiVersion: tekton.dev/v1alpha1
+kind: TriggerTemplate
+metadata:
+  name: nodejs-template
+spec:
+  params:
+  - name: git-repo-url
+    description: The git repository url
+  - name: git-revision
+    description: The git revision
+    default: master
+  - name: git-repo-name
+    description: The name of the deployment to be created / patched
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1alpha1
+    kind: PipelineResource
+    metadata:
+      name: $(params.git-repo-name)-git-repo-$(uid)
+    spec:
+      type: git
+      params:
+      - name: revision
+        value: $(params.git-revision)
+      - name: url
+        value: $(params.git-repo-url)
+  - apiVersion: tekton.dev/v1alpha1
+    kind: PipelineRun
+    metadata:
+      name: build-$(params.git-repo-name)-$(uid)
+    spec:
+      serviceAccountName: tekton-sa
+      pipelineRef:
+        name: build
+      resources:
+      - name: git-repo
+        resourceRef:
+          name: $(params.git-repo-name)-git-repo-$(uid)
+      params:
+      - name: deployment-name
+        value: $(params.git-repo-name)

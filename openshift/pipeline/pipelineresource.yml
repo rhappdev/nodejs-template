@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: nodejs-template-git-master
+spec:
+  type: git
+  params:
+    - name: revision
+      value: tekton
+    - name: url
+      value: https://github.com/rhappdev/nodejs-template.git

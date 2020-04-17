@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Pipeline
+metadata:
+  name: build
+spec:
+  resources:
+  - name: git-repo
+    type: git
+  params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
+  tasks:
+  - name: build-task
+    taskRef:
+      name: build-task
+    resources:
+      inputs:
+      - name: source
+        resource: git-repo

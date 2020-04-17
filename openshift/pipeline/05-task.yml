@@ -1,0 +1,26 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: build-task
+spec:
+  inputs:
+    resources:
+      - name: source
+        type: git
+  steps:
+    - name: install
+      image: node:12
+      command:
+        - /bin/sh 
+        - -c
+      args:
+        - npm install
+      workingDir: /workspace/source
+    - name: list
+      image: node:12
+      command:
+        - /bin/sh
+        - -c
+      args:
+        - ls
+      workingDir: /workspace/source

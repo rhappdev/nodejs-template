@@ -1,0 +1,30 @@
+apiVersion: v1
+data:
+  secret: dGVzdGhvb2s=
+kind: Secret
+metadata:
+  name: nodejs-github-hook-secret
+type: Opaque
+
+---
+
+apiVersion: tekton.dev/v1alpha1
+kind: EventListener
+metadata:
+  name: nodejs-template-listener-interceptor
+spec:
+  serviceAccountName: tekton-sa
+  triggers:
+    - name: nodejs-github-trigger
+      interceptors:
+        - github:
+            secretRef:
+              secretName: nodejs-github-hook-secret
+              secretKey: secret
+            eventTypes:
+              - pull_request
+              - push
+      bindings:
+        - name: nodejs-template-binding
+      template:
+        name: nodejs-template
