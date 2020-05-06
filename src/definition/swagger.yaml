@@ -6,19 +6,23 @@ info:
 paths:
   /hello:
     post:
-      x-swagger-router-controller: helloWorldRoute
+      x-eov-operation-handler: helloWorldRoute
       operationId: helloWorldPost
       tags:
         - /hello
       description: >-
         Returns greeting.
-      parameters:
-        - name: greeting
-          in: query
-          description: Name of greeting
-          required: true
-          schema:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Greeting'
+              properties:
+                greeting:
+                  type: string
+                example:
+                  greeting: Mikel
+        required: true
       responses:
         '200':
           description: Successful request.
@@ -33,7 +37,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     get:
-      x-swagger-router-controller: helloWorldRoute
+      x-eov-operation-handler: helloWorldRoute
       operationId: helloWorldGet
       tags:
         - /hello
@@ -75,3 +79,9 @@ components:
           type: string
       required:
         - message
+    Greeting:
+      required:
+        - greeting
+      properties:
+          msg:
+            type: string

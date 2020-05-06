@@ -1,69 +1,65 @@
-import * as winston from "winston";
-import * as Debug from "debug";
-import * as env from "./env";
-import { getRequestId } from "./lib/cls";
-import { IncomingHttpHeaders, OutgoingHttpHeaders } from "http";
-import * as express from "express";
-import * as P from "bluebird";
-import * as perfy from "perfy";
+import * as env from './env';
+import { getRequestId } from './lib/cls';
+import { IncomingHttpHeaders, OutgoingHttpHeaders } from 'http';
+import * as express from 'express';
+import * as perfy from 'perfy';
+import * as Log from 'debug-level';
+
+const logLevel = env.get('LOG_LEVEL') ? env.get('LOG_LEVEL') : 'INFO';
+
+Log.options({
+  level: logLevel,
+  json: false,
+  serverinfo: true,
+  hideDate: false,
+  colors: true
+});
 
 export class TDebug {
-
-  private debugger: debug.IDebugger;
+  private debugLevel: any;
 
   constructor(namespace: string) {
-      this.debugger = Debug(namespace);
+    this.debugLevel = new Log(namespace);
   }
 
-  public log(formatter: string, ...args: any[]) {
-    this.logger(Levels.Log, formatter, ...args);
+  public error(formatter: string, ...args: any) {
+    this.debugLevel.error(this.formatter(formatter), ...args);
   }
 
-  public error(formatter: string, ...args: any[]) {
-    this.logger(Levels.Error, formatter, ...args);
+  public warn(formatter: string, ...args: any) {
+    this.debugLevel.warn(this.formatter(formatter), ...args);
   }
 
-  public warn(formatter: string, ...args: any[]) {
-    this.logger(Levels.Warn, formatter, ...args);
+  public info(formatter: string, ...args: any) {
+    this.debugLevel.info(this.formatter(formatter), ...args);
   }
 
-  public verbose(formatter: string, ...args: any[]) {
-    this.logger(Levels.Verbose, formatter, ...args);
+  public debug(formatter: string, ...args: any) {
+    this.debugLevel.debug(this.formatter(formatter), ...args);
   }
 
-  public silly(formatter: string, ...args: any[]) {
-    this.logger(Levels.Silly, formatter, ...args);
+  public fatal(formatter: string, ...args: any) {
+    this.debugLevel.fatal(this.formatter(formatter), ...args);
   }
 
   public start(label: string) {
-    perfy.start(getRequestId() + "." + label);
+    perfy.start(getRequestId() + '.' + label);
   }
 
   public end(label: string) {
-    const selector = getRequestId() + "." + label;
+    const selector = getRequestId() + '.' + label;
     if (perfy.exists(selector)) {
-      const result = perfy.end(getRequestId() + "." + label);
-      this.logger(Levels.Log, `${label} executed in ${result.time} sec.`);
+      const result = perfy.end(getRequestId() + '.' + label);
+      this.debugLevel.info(`${label} executed in ${result.time} sec.`);
     }
   }
 
-  private logger(level: Levels, formatter: string, ...args: any[]) {
-    const message = getRequestId() ? getRequestId() + " " + level + " " + formatter  : formatter;
-    this.debugger(message, ...args);
+  private formatter(formatter: string): string {
+    return getRequestId() ? getRequestId() + ' ' + formatter  : formatter;
   }
 }
 
-const debug = new TDebug("app:src:lib:log");
-
-export enum Levels {
-  Log = "LOG",
-  Error = "ERROR",
-  Warn = "WARN",
-  Verbose = "VERBOSE",
-  Info = "INFO",
-  Debug = "DEBUG",
-  Silly = "SILLY"
-}
+const debug = new TDebug('app:src:lib:log');
 
 export interface RequestLog {
   method: string;
@@ -82,7 +78,7 @@ export interface ResponseLog {
   headers?: OutgoingHttpHeaders;
 }
 
-export async function inOutLogger(req: express.Request, res: express.Response, next: express.NextFunction): P <any> {
+export async function inOutLogger(req: express.Request, res: express.Response, next: express.NextFunction): Promise <any> {
   const reqLog = {
     method : req.method,
     originalUrl: req.originalUrl,
@@ -90,7 +86,7 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
     headers: req.headers,
     params: req.query
   } as RequestLog;
-  debug.log("Incoming Request: %O", reqLog);
+  debug.debug('Incoming Request: %O', reqLog);
 
   const oldWrite = res.write;
   const oldEnd = res.end;
@@ -99,7 +95,7 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
 
   res.write = (...restArgs): boolean => {
     if (restArgs[0] && chunks.length === 0) {
-      chunks.push(new Buffer(restArgs[0]));
+      chunks.push(Buffer.from(restArgs[0]));
     }
     oldWrite.apply(res, restArgs);
     return true;
@@ -107,40 +103,40 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
 
   res.end = (...restArgs) => {
     if (restArgs[0]) {
-      chunks.push(new Buffer(restArgs[0]));
+      chunks.push(Buffer.from(restArgs[0]));
     }
     oldEnd.apply(res, restArgs);
     logFn();
   };
 
   const cleanup = () => {
-    res.removeListener("close", abortFn);
-    res.removeListener("error", errorFn);
+    res.removeListener('close', abortFn);
+    res.removeListener('error', errorFn);
   };
 
   const logFn = () => {
     cleanup();
-    const body = Buffer.concat(chunks).toString("utf8");
+    const body = Buffer.concat(chunks).toString('utf8');
     const resLog = {
       statusCode: res.statusCode,
       statusMessage: res.statusMessage,
-      contentLength: res.get("Content-Length") || 0,
-      contentType: res.get("Content-Type"),
+      contentLength: res.get('Content-Length') || 0,
+      contentType: res.get('Content-Type'),
       body,
       headers: res.getHeaders ? res.getHeaders() : undefined // Added in 7.7.0
     } as ResponseLog;
     if (resLog.statusCode >= 500) {
-      debug.error("Outgoing Response: %O", resLog);
+      debug.error('Outgoing Response: %O', resLog);
     } else if (resLog.statusCode >= 400) {
-      debug.warn("Outgoing Response: %O", resLog);
+      debug.warn('Outgoing Response: %O', resLog);
     } else {
-      debug.log("Outgoing Response: %O", resLog);
+      debug.debug('Outgoing Response: %O', resLog);
     }
   };
 
   const abortFn = () => {
       cleanup();
-      debug.warn("Request aborted by the client");
+      debug.warn('Request aborted by the client');
   };
 
   const errorFn = err => {
@@ -148,24 +144,12 @@ export async function inOutLogger(req: express.Request, res: express.Response, n
       debug.error(`Request pipeline error: ${err}`);
   };
 
-  res.on("close", abortFn); // aborted pipeline
-  res.on("error", errorFn); // pipeline internal error
+  res.on('close', abortFn); // aborted pipeline
+  res.on('error', errorFn); // pipeline internal error
 
   next();
 }
 
-/* const logger = new (winston.Logger)({
-  transports: [
-    new (winston.transports.Console)({
-      timestamp: true,
-      "level": env.get("LOG_LEVEL")
-    })
-  ]
-}); */
-
-const logger = winston.createLogger({
-  level: env.get("LOG_LEVEL"),
-  transports: [ new winston.transports.Console()]
-});
+const logger = new Log('app:src');
 
 export default logger;
